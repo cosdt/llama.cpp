@@ -1,7 +1,8 @@
-RichardErkhov/mistralai_-_Mixtral-8x7B-v0.1-4bits
+RichardErkhov/mistralai_-_Mixtral-8x7B-Instruct-v0.1-gguf/Mixtral-8x7B-Instruct-v0.1.Q4_0.gguf
 google-bert/bert-base-uncased
 
-deepseek-ai/DeepSeek-Prover-V2-7B
+deepseek-ai/deepseek-coder-1.3b-base
+microsoft/Phi-3.5-MoE-instruct
 
 aisingapore/Llama-SEA-LION-v3-8B-IT
 
@@ -16,10 +17,9 @@ TheBloke/Poro-34B-GGUF/poro-34b.Q8_0.gguf
 1bitLLM/bitnet_b1_58-xl
 google/flan-t5-base
 apple/OpenELM-1_1B-Instruct
-nari-labs/Dia-1.6B
 THUDM/glm-edge-4b-chat
 THUDM/GLM-4-9B-0414
-HuggingFaceTB/SmolLM-1.7B
+HuggingFaceTB/SmolLM-135M
 LGAI-EXAONE/EXAONE-3.0-7.8B-Instruct
 tiiuae/falcon-mamba-7b
 erfanvaredi/jais-7b-chat

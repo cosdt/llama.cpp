@@ -1,18 +1,5 @@
 #!/bin/bash
 
-pip install -U huggingface_hub -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple > /dev/null 2>&1
-export HF_ENDPOINT=https://hf-mirror.com
-if ! command -v expect &> /dev/null; then
-    echo "expect is not installed. Installing expect..."
-    sudo apt-get update
-    sudo apt-get install -y expect
-
-    if [ $? -ne 0 ]; then
-        echo "expect installation failed. Please check your network or APT source configuration."
-        exit 1
-    fi
-fi
-
 # Display help information
 usage() {
     echo "Usage: $0 [Options] [Arguments...]"
@@ -31,7 +18,9 @@ file_name=""
 models=""
 model_path="."
 llamaCpp_path=""
+# 重试次数
 max_retries=3
+# 重试间隔（秒）
 retry_interval=6
 
 declare -a model_names
@@ -71,9 +60,6 @@ run_inference_with_expect() {
 EOF
 }
 
-
-
-
 # Parsing command line arguments
 while getopts "hm:f:d:b:" opt; do
     case $opt in
@@ -105,6 +91,20 @@ while getopts "hm:f:d:b:" opt; do
     esac
 done
 
+pip install -r $llamaCpp_path/requirements/requirements-convert_hf_to_gguf.txt huggingface_hub --extra-index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple > /dev/null 2>&1
+pip install huggingface_hub -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple > /dev/null 2>&1
+export HF_ENDPOINT=https://hf-mirror.com
+if ! command -v expect &> /dev/null; then
+    echo "expect is not installed. Installing expect..."
+    sudo apt-get update
+    sudo apt-get install -y expect
+
+    if [ $? -ne 0 ]; then
+        echo "expect installation failed. Please check your network or APT source configuration."
+        exit 1
+    fi
+fi
+
 # acquire model name
 if [ ! -z "$models" ]; then
     IFS=',' read -r -a model_names <<< "$models"
@@ -126,11 +126,11 @@ for model in "${model_names[@]}"; do
                 model_name=$(echo "$repo_id" | cut -d'/' -f2)
                 download_path="$model_path/gguf/"
                 gguf_path="$download_path/$gguf_file"
+                echo "============Downloading single .gguf file: $gguf_file from $repo_id============"
                 # 判断文件是否已存在
                 if [ -f "$gguf_path" ]; then
                     echo "-------------------$gguf_file already exists, Skip!!!"
                 else
-                    echo "============Downloading single .gguf file: $gguf_file from $repo_id============"
                     python - <<END > /dev/null 2>&1
 from huggingface_hub import hf_hub_download
 hf_hub_download(
@@ -141,7 +141,6 @@ hf_hub_download(
 )
 END
                     status=$?
-
                     if [ $status -eq 0 ]; then
                         echo "$model -------------------Download Success!!! (.gguf)"
                     fi
@@ -152,7 +151,7 @@ END
                 if [ $ret -eq 0 ]; then
                     echo "$model Success inference"
                 else
-                    echo "$model Faild inference"
+                    echo "$model Failed inference"
                 fi
                 break
             else
@@ -161,7 +160,7 @@ END
                 download_path="$model_path/hf-models/$model_name"
 
                 echo "============Attempting to download model: $model (Attempt: $((attempt + 1)))============"
-                huggingface-cli download "$model" --local-dir "$download_path" > /dev/null 2>&1
+                huggingface-cli download "$model" --local-dir "$download_path" > /de v/null 2>&1
                 status=$?
 
                 if [ $status -eq 0 ]; then
@@ -202,7 +201,7 @@ END
                         if [ $ret -eq 0 ]; then
                             echo "$model Success inference ($quant_type)"
                         else
-                            echo "$model Faild inference ($quant_type)"
+                            echo "$model Failed inference ($quant_type)"
                         fi
                     done
                     break
