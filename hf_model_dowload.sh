@@ -160,7 +160,7 @@ END
                 download_path="$model_path/hf-models/$model_name"
 
                 echo "============Attempting to download model: $model (Attempt: $((attempt + 1)))============"
-                huggingface-cli download "$model" --local-dir "$download_path"
+                huggingface-cli download "$model" --local-dir "$download_path" > /dev/null 2>&1
                 status=$?
 
                 if [ $status -eq 0 ]; then
