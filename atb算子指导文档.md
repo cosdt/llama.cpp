@@ -220,35 +220,35 @@ g++ -I "${ATB_HOME_PATH}/include" -I "${ASCEND_HOME_PATH}/include" -L "${ATB_HOM
 
 ```
 // 单独创建 atb::TensorDesc 示例
-   	atb::TensorDesc desc;
-    desc.dtype = ACL_FLOAT16;
-    desc.format = ACL_FORMAT_ND;
-    desc.shape.dimNum = 2;
-    desc.shape.dims[0] = 2;
-    desc.shape.dims[1] = 2;
-    intensorDescs.push_back(desc);
+atb::TensorDesc desc;
+desc.dtype = ACL_FLOAT16;
+desc.format = ACL_FORMAT_ND;
+desc.shape.dimNum = 2;
+desc.shape.dims[0] = 2;
+desc.shape.dims[1] = 2;
+intensorDescs.push_back(desc);
     
     
 // 单独创建 atb::Tensor 示例
-    atb::Tensor tensor;
-    tensor.desc = intensorDescs.at(0);
-    tensor.dataSize = atb::Utils::GetTensorSize(tensor);
-    int ret = aclrtMalloc(&tensor.deviceData, tensor.dataSize, ACL_MEM_MALLOC_HUGE_FIRST);
-    if (ret != 0) {
-        std::cout << "alloc error1!";
-        exit(0);
-    }
-    ret = aclrtMemset(tensor.deviceData, tensor.dataSize, 0, tensor.dataSize);
-    if (ret != 0) {
-        std::cout << "alloc error2!";
-        exit(0);
-    }
-    inTensors.push_back(tensor);
+atb::Tensor tensor;
+tensor.desc = intensorDescs.at(0);
+tensor.dataSize = atb::Utils::GetTensorSize(tensor);
+int ret = aclrtMalloc(&tensor.deviceData, tensor.dataSize, ACL_MEM_MALLOC_HUGE_FIRST);
+if (ret != 0) {
+    std::cout << "alloc error1!";
+    exit(0);
+}
+ret = aclrtMemset(tensor.deviceData, tensor.dataSize, 0, tensor.dataSize);
+if (ret != 0) {
+    std::cout << "alloc error2!";
+    exit(0);
+}
+inTensors.push_back(tensor);
 ```
 
 
 
-示例使用了`atb::SVector`中**两个函数**：
+示例使用了`atb::SVector`中`push_back()`和`resize()`：
 
 - **`push_back()`:** 向容器内添加元素
 
