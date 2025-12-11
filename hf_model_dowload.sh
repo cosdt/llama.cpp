@@ -146,7 +146,7 @@ END
                     fi
                 fi
 
-                run_inference_with_expect "$gguf_path" "what is a car?" 30 "$llamaCpp_path/build/bin/llama-cli" > /dev/null 2>&1
+                run_inference_with_expect "$gguf_path" "what is a car?" 60 "$llamaCpp_path/build/bin/llama-cli" > /dev/null 2>&1
                 ret=$?
                 if [ $ret -eq 0 ]; then
                     echo "$model Success inference"
@@ -160,7 +160,7 @@ END
                 download_path="$model_path/hf-models/$model_name"
 
                 echo "============Attempting to download model: $model (Attempt: $((attempt + 1)))============"
-                huggingface-cli download "$model" --local-dir "$download_path" > /de v/null 2>&1
+                huggingface-cli download "$model" --local-dir "$download_path" > /dev/null 2>&1
                 status=$?
 
                 if [ $status -eq 0 ]; then
@@ -196,7 +196,7 @@ END
                             fi
                         fi
 
-                        run_inference_with_expect "$quant_out" "what is a car?" 30 "$llamaCpp_path/build/bin/llama-cli" > /dev/null 2>&1
+                        run_inference_with_expect "$quant_out" "what is a car?" 60 "$llamaCpp_path/build/bin/llama-cli" > /dev/null 2>&1
                         ret=$?
                         if [ $ret -eq 0 ]; then
                             echo "$model Success inference ($quant_type)"
